@@ -4,8 +4,6 @@ pipeline {
 
     tools {
         maven 'Maven3'
-        // Add jdk 'JDK17' here only if JDK17
-        // is configured in Jenkins.
     }
 
     stages {
@@ -17,22 +15,20 @@ pipeline {
 
         stage('Build') {
             steps {
-                dir('java') {
-                    bat 'mvn -B clean package'
-                }
+                bat 'mvn -B clean package'
             }
         }
 
         stage('Test') {
             steps {
-                junit testResults: 'java/target/surefire-reports/*.xml',
+                junit testResults: 'target/surefire-reports/*.xml',
                       allowEmptyResults: true
             }
         }
 
         stage('Archive WAR') {
             steps {
-                archiveArtifacts artifacts: 'java/target/*.war',
+                archiveArtifacts artifacts: 'target/*.war',
                                  fingerprint: true
             }
         }
