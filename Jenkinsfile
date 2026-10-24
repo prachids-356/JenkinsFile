@@ -12,7 +12,7 @@ pipeline {
         stage('Build') {
             steps {
                 dir('java') {
-                    sh 'mvn -B clean package'
+                    bat 'mvn -B clean compile'
                 }
             }
         }
