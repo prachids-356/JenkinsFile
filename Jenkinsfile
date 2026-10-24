@@ -53,12 +53,12 @@ pipeline {
         }
 
         stage('Verify Deployment') {
-            steps {
-                bat '''
-                    powershell -NoProfile -Command "$ok = $false; for ($i = 0; $i -lt 12; $i++) { try { $r = Invoke-WebRequest 'http://localhost:8081/1.jsp' -TimeoutSec 3; if ($r.StatusCode -eq 200) { $ok = $true; break } } catch {}; Start-Sleep -Seconds 5 }; if (-not $ok) { docker logs java-web-container; exit 1 }"
-                '''
-            }
-        }
+    steps {
+        bat '''
+            powershell -NoProfile -Command "try { $r = Invoke-WebRequest 'http://localhost:8081/1.jsp' -UseBasicParsing -TimeoutSec 10; if ($r.StatusCode -ne 200) { exit 1 }; Write-Host 'Deployment verified: HTTP 200 OK' } catch { Write-Host $_; exit 1 }"
+        '''
+       }
+     }
     }
 
     post {
